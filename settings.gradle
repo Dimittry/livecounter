@@ -1,0 +1,4 @@
+rootProject.name = 'livecounter'
+include 'parser'
+include 'saver'
+
