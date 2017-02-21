@@ -1,4 +1,4 @@
-package com.livecounter.saver.dao;
+package com.livecounter.saver.dao.util;
 
 
 import com.zaxxer.hikari.HikariConfig;
@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Properties;
 
-public class BaseDAO {
+public class Connector {
     private static final String DB_PROPS_FILENAME = "dp.properties";
     private static DataSource dataSource;
 
@@ -33,7 +33,7 @@ public class BaseDAO {
     public static Properties getDbProperties() {
         final Properties properties = new Properties();
         try {
-            properties.load(BaseDAO.class.getClassLoader().getResourceAsStream(DB_PROPS_FILENAME));
+            properties.load(Connector.class.getClassLoader().getResourceAsStream(DB_PROPS_FILENAME));
         } catch (IOException e) {
             throw new InvalidStateException("Can't load property file.");
         }
