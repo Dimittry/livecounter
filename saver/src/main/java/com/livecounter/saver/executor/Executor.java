@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class Executor {
     private final Connection connection;
@@ -21,7 +22,7 @@ public class Executor {
         return updated;
     }
 
-    public int[] execBatchUpdate(final String[] queries) throws SQLException{
+    public int[] execBatchUpdate(final List<String> queries) throws SQLException{
         connection.setAutoCommit(false);
         Statement stmt = connection.createStatement();
         for(String query : queries) {
