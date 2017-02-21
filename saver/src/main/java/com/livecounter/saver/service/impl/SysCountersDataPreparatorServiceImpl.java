@@ -1,6 +1,8 @@
 package com.livecounter.saver.service.impl;
 
+import com.livecounter.saver.dao.SourceDAO;
 import com.livecounter.saver.domain.Counter;
+import com.livecounter.saver.domain.Source;
 import com.livecounter.saver.domain.Sources;
 import com.livecounter.saver.service.DataPreparatorService;
 
@@ -11,25 +13,55 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.logging.SimpleFormatter;
 
 public class SysCountersDataPreparatorServiceImpl implements DataPreparatorService {
+
+    private static final String SOURCE_DATA_TABLE = "source_data";
+
     private static final String PATH_TO_LOAD;
+
     private static final int WORDS_LIMIT_PER_LINE = 5;
+
+    private static final Map<String, Long> sourceMap = new HashMap<>();
+
     private List<Counter> counters = new ArrayList<>();
+
+    private SourceDAO sourceDAO;
 
     static {
         PATH_TO_LOAD = System.getProperty("user.dir") + File.separator
                 + ".." + File.separator + "temp" + File.separator + "counters_parsed.cps";
     }
 
+    public SysCountersDataPreparatorServiceImpl(SourceDAO sourceDAO) {
+        this.sourceDAO = sourceDAO;
+        initSourceMap();
+    }
+
     @Override
-    public List<Counter> get() {
+    public List<Counter> getAsCountersObj() {
         return counters;
     }
 
+    @Override
+    public List<String> getAsStrings() {
+        List<String> queries = new ArrayList<>();
+        for(Counter counter : counters) {
+            queries.add("INSERT INTO " + SOURCE_DATA_TABLE + " (id_source, day, type, value, created) " +
+                    " VALUES (" + counter.getIdSource() + ", " +
+                    "'" + formateDateToString(counter.getDay(), "yyyy-MM-dd") + "', " +
+                    "'" + counter.getType() + "', " + counter.getValue() + ", " +
+                    "'" + formateDateToString(counter.getCreated(), "yyyy-MM-dd HH:mm:ss") + "')");
+        }
+        return queries;
+    }
+
+
+    /**
+     * Loads data from file and adds it to List<Counter> counters
+     */
     @Override
     public void load() {
         try(BufferedReader bf = new BufferedReader(new FileReader(PATH_TO_LOAD))) {
@@ -46,6 +78,11 @@ public class SysCountersDataPreparatorServiceImpl implements DataPreparatorServi
         }
     }
 
+    /**
+     *  Parses line from a file
+     * @param line a line from file to parse
+     * @return the array of strings contained in line from file
+     */
     private String[] parse(String line) {
         String[] parts = line.split(",");
         return parts;
@@ -60,13 +97,15 @@ public class SysCountersDataPreparatorServiceImpl implements DataPreparatorServi
         return counterItem;
     }
 
-    private int getSourceId(final String sourceName) {
-        for(Sources source : Sources.values()) {
-            if(source.getName().equals(sourceName)) {
-                return source.getValue();
-            }
+    private long getSourceId(final String sourceName) {
+        return sourceMap.get(sourceName);
+    }
+
+    private void initSourceMap() {
+        List<Source> sources = sourceDAO.findAll();
+        for(Source source : sources) {
+            sourceMap.put(source.getName(), source.getId());
         }
-        return -1;
     }
 
     private Date formateDate(final String date, final String pattern) {
@@ -78,5 +117,9 @@ public class SysCountersDataPreparatorServiceImpl implements DataPreparatorServi
             result = new Date();
         }
         return result;
+    }
+
+    private String formateDateToString(final Date date, final String pattern) {
+        return new SimpleDateFormat(pattern).format(date);
     }
 }
