@@ -6,13 +6,13 @@ public class Counter {
     private long id;
     private long idSource;
     private Date day;
-    private byte type;
+    private int type;
     private long value;
     private Date created;
 
     public Counter() {}
 
-    public Counter(long id, long idSource, Date day, byte type, long value, Date created) {
+    public Counter(long id, long idSource, Date day, int type, long value, Date created) {
         this.id = id;
         this.idSource = idSource;
         this.day = day;
@@ -33,7 +33,7 @@ public class Counter {
         this.day = day;
     }
 
-    public void setType(byte type) {
+    public void setType(int type) {
         this.type = type;
     }
 
@@ -57,7 +57,7 @@ public class Counter {
         return day;
     }
 
-    public byte getType() {
+    public int getType() {
         return type;
     }
 
