@@ -5,7 +5,6 @@ import com.countergrabber.domain.*;
 import com.countergrabber.service.GrabberService;
 import com.gargoylesoftware.htmlunit.JavaScriptPage;
 import com.gargoylesoftware.htmlunit.WebClient;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -25,11 +24,13 @@ public class GrabberServiceImpl implements GrabberService {
     public void grab() {
         List<Source> sources = sourceDAO.findAll();
         for(Source source : sources) {
+            System.out.println(source.getAddress());
             String[] parts = getPage(source.getAddress());
             buildCounter(parts, source.getId());
         }
     }
 
+    @Override
     public List<Counter> getCounters() {
         return counters;
     }
@@ -79,12 +80,16 @@ public class GrabberServiceImpl implements GrabberService {
         Map<String, String> parts;
         try {
             parts = splitLine(line);
-        } catch(InvalidStateException | NumberFormatException ignore) {
+        } catch(IllegalStateException | NumberFormatException ignore) {
             return result;
         }
 
         int counterValue = getCounterValue(parts);
         int counterType = getCounterType(parts);
+
+        if(counterType == 0) {
+            return result;
+        }
 
         result.put("counterValue", counterValue);
         result.put("counterType", counterType);
@@ -94,7 +99,7 @@ public class GrabberServiceImpl implements GrabberService {
     private Map<String, String> splitLine(final String line) {
         String[] parts = line.split("=");
         if(parts.length < PARTS_IN_LINE) {
-            throw new InvalidStateException("Not enough parameters.");
+            throw new IllegalStateException("Not enough parameters.");
         }
         Map<String, String> partMap = new HashMap<>();
         partMap.put("counterName", parts[0]);
@@ -108,7 +113,7 @@ public class GrabberServiceImpl implements GrabberService {
     }
 
     private int getCounterType(final Map<String, String> parts) {
-        String counteraName = parts.get("counterName");
+        String counterName = parts.get("counterName");
 
         CounterTypes[] hitTypes = HitCounterTypes.values();
         CounterTypes[] visTypes = VisCounterTypes.values();
@@ -121,7 +126,7 @@ public class GrabberServiceImpl implements GrabberService {
 
         int counterType = 0;
         for (CounterTypes type : counterTypes) {
-            if(counteraName.contains(type.getName())) {
+            if(counterName.contains(type.getName())) {
                 counterType = type.getType();
                 break;
             }
