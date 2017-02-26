@@ -3,8 +3,8 @@ package com.countergrabber.domain;
 public enum HitCounterTypes implements CounterTypes {
     MONTH("month", 8),
     WEEK("week", 6),
-    DAY("day", 4),
-    TODAY("today", 2);
+    TODAY("today", 2),
+    DAY("day", 4);
 
     private String name;
     private int type;

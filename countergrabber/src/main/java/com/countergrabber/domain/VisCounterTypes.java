@@ -3,8 +3,8 @@ package com.countergrabber.domain;
 public enum VisCounterTypes implements CounterTypes {
     MONTH("month", 7),
     WEEK("week", 5),
-    DAY("day", 3),
-    TODAY("today", 1);
+    TODAY("today", 1),
+    DAY("day", 3);
 
     private String name;
     private int type;
