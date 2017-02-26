@@ -3,7 +3,6 @@ package com.countergrabber.dao.util;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -35,7 +34,7 @@ public class Connector {
         try {
             properties.load(Connector.class.getClassLoader().getResourceAsStream(DB_PROPS_FILENAME));
         } catch (IOException e) {
-            throw new InvalidStateException("Can't load property file.");
+            throw new IllegalStateException("Can't load property file.");
         }
         return properties;
     }
