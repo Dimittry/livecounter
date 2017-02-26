@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.List;
 
 public class Executor {
@@ -22,17 +23,20 @@ public class Executor {
         return updated;
     }
 
-    public int[] execBatchUpdate(final List<String> queries) throws SQLException{
+    public int execBatchUpdate(final List<String> queries) throws SQLException{
+        int result = 0;
         connection.setAutoCommit(false);
         Statement stmt = connection.createStatement();
         for(String query : queries) {
             stmt.addBatch(query);
         }
         int[] updated = stmt.executeBatch();
+        result = Arrays.stream(updated).sum();
+
         connection.commit();
         stmt.close();
         connection.close();
-        return updated;
+        return result;
     }
 
     public <T> T execQuery(final String query, ResultHandler<T> handler)
