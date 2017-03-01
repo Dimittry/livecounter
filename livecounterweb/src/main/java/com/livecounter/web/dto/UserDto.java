@@ -1,6 +1,8 @@
 package com.livecounter.web.dto;
 
 
+import com.livecounter.validation.ValidEmail;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -20,6 +22,7 @@ public class UserDto {
 
     @NotNull
     @Size(min=1)
+    @ValidEmail
     private String email;
 
     public String getFirstName() {
