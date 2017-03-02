@@ -1,11 +1,13 @@
 package com.livecounter.web.dto;
 
 
+import com.livecounter.validation.PasswordMatches;
 import com.livecounter.validation.ValidEmail;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@PasswordMatches
 public class UserDto {
     @NotNull
     @Size(min=1)
