@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface UserRepo {
     List<User> findAll();
+    User findByEmail(String email);
+    void save(User user);
 }
