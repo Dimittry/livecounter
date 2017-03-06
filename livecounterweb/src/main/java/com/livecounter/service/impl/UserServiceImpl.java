@@ -25,8 +25,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDto.getLastName());
         user.setPassword(userDto.getPassword());
         user.setEmail(userDto.getEmail());
-        // TODO: persist to db
-        return new User();
+        return userRepo.save(user);
     }
 
     private boolean isEmailExist(final String email) {
