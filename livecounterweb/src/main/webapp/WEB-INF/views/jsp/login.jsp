@@ -1,10 +1,12 @@
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <%@page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" language="java"%>
 <html>
 <head></head>
 <body>
 <h1>Login</h1>
-<form name='f' action="login" method='POST'>
+<form name='f' action="perform_login" method='POST'>
+    <security:csrfInput/>
     <table>
         <tr>
             <td>User:</td>

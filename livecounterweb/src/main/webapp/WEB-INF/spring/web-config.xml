@@ -32,6 +32,8 @@
           id="localeResolver">
         <property name="cookieName" value="mylocale" />
     </bean>
+    <mvc:view-controller path="/login" view-name="login"/>
+    <mvc:view-controller path="/" view-name="index"/>
     <!-- Declare the Interceptor -->
     <mvc:interceptors>
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">

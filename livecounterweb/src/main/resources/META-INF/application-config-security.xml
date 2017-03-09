@@ -7,10 +7,16 @@
            http://www.springframework.org/schema/security/spring-security.xsd">
 
     <http>
+        <intercept-url pattern="/login*" access="isAnonymous()"/>
         <intercept-url pattern="/**"
                        access="hasAnyRole('ROLE_CUSTOMER', 'ROLE_ADMIN')" />
-        <form-login />
-        <logout />
+        <form-login
+            login-page="/login"
+            default-target-url="/users/registration"
+            authentication-failure-url="/login?error=true"
+            login-processing-url="/perform_login"
+        />
+        <logout logout-success-url="/login"/>
         <remember-me />
         <headers>
             <cache-control />
