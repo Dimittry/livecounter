@@ -1,6 +1,10 @@
 package com.livecounter.persistence.model;
 
+
+import org.jboss.aerogear.security.otp.api.Base32;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user_account")
@@ -23,6 +27,19 @@ public class User {
     private boolean enabled;
 
     private String secret;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    List<Role> roles;
+
+    public User() {
+        super();
+        secret = Base32.random();
+        enabled = false;
+    }
 
     public Long getId() {
         return id;
@@ -78,6 +95,14 @@ public class User {
 
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    public void setRoles(final List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
     }
 
     @Override
