@@ -25,14 +25,16 @@
     </http>
 
     <authentication-manager>
-        <authentication-provider>
-            <user-service>
-                <user name="admin" password="admin" authorities="ROLE_ADMIN" />
-                <user name="cust1" password="cust1" authorities="ROLE_CUSTOMER" />
-                <user name="cust2" password="cust2" authorities="ROLE_CUSTOMER" />
-            </user-service>
-        </authentication-provider>
+        <!--<authentication-provider>-->
+            <!--<user-service>-->
+                <!--<user name="admin" password="admin" authorities="ROLE_ADMIN" />-->
+                <!--<user name="cust1" password="cust1" authorities="ROLE_CUSTOMER" />-->
+                <!--<user name="cust2" password="cust2" authorities="ROLE_CUSTOMER" />-->
+            <!--</user-service>-->
+        <!--</authentication-provider>-->
+        <authentication-provider user-service-ref="userDetailsService"/>
     </authentication-manager>
+    <beans:bean id="userDetailsService" class="com.livecounter.security.CustomCounterUserDetailsService"/>
 
     <global-method-security secured-annotations="enabled" />
 </beans:beans>
