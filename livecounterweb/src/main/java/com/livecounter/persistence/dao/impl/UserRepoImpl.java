@@ -15,20 +15,11 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class UserRepoImpl implements UserRepo {
-
-    private SessionFactory sessionFactory;
+public class UserRepoImpl extends BaseRepoImpl implements UserRepo {
 
     @Autowired
     public UserRepoImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
-    /**
-     * @return the transactional session
-     */
-    protected Session session() {
-        return sessionFactory.getCurrentSession();
+        super(sessionFactory);
     }
 
     @Override
