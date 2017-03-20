@@ -40,5 +40,6 @@
             <property name="paramName" value="lang" />
         </bean>
     </mvc:interceptors>
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
 
 </beans>
