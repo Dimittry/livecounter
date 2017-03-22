@@ -4,6 +4,8 @@
 <html>
 <head>
     <title>Источники</title>
+    <link type="text/css" rel="stylesheet" href="${contextPath}/resources/vendor/css/semantic.css"/>
+    <link type="text/css" rel="stylesheet" href="${contextPath}/resources/vendor/css/style.css"/>
 </head>
 <style>
     .clear {
@@ -11,19 +13,26 @@
     }
 </style>
 <body>
-    <h2>Источники</h2>
-    <c:if test="${not empty sources}">
-        <ul>
-            <c:forEach var="source" items="${sources}">
-                <li>
-                    <span style="width: 80px; display: block; float: left;">
-                        <a href="${contextPath}/sources/${source.name}">${source.name}</a>
-                    </span>
-                    <span style="width: 450px; display: block; float: left;">${source.address}</span>
-                    <div class="clear"/>
-                </li>
-            </c:forEach>
-        </ul>
-    </c:if>
+    <div class="ui container">
+        <h2>Источники</h2>
+        <c:if test="${not empty sources}">
+            <div class="ui segments">
+                <c:forEach var="source" items="${sources}">
+                    <div class="ui segment">
+                        <div class="left floated column">
+                            <a href="${contextPath}/sources/${source.name}">${source.name}</a>
+                        </div>
+                        <div class="right floated column">
+                            ${source.address}
+                        </div>
+                    </div>
+
+                </c:forEach>
+            </div>
+        </c:if>
+
+
+    </div>
+
 </body>
 </html>
