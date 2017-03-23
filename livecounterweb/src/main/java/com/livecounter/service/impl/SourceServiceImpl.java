@@ -24,4 +24,9 @@ public class SourceServiceImpl implements SourceService {
     public Source findSourceByName(String name) {
         return sourceRepo.findSourceByName(name);
     }
+
+    @Override
+    public Source persist(final Source source) {
+        return sourceRepo.persist(source);
+    }
 }

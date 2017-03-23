@@ -41,6 +41,10 @@ public class Source {
         this.name = name;
     }
 
+    public boolean isNew() {
+        return (id == null);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

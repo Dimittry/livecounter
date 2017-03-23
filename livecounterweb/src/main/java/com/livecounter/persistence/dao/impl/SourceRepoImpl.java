@@ -27,4 +27,10 @@ public class SourceRepoImpl extends BaseRepoImpl implements SourceRepo {
         return (Source)session().createQuery("from Source s where s.name = :name")
                 .setParameter("name", name).getSingleResult();
     }
+
+    @Override
+    public Source persist(final Source source) {
+        session().saveOrUpdate(source);
+        return source;
+    }
 }
