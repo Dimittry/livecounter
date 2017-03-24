@@ -16,23 +16,30 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @Controller
+@RequestMapping(value = "/sources")
 public class SourceController {
     @Autowired
     private SourceService sourceService;
 
-    @RequestMapping(value = "/sources", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ModelAndView showAllSources() {
         List<Source> sources = sourceService.findAll();
         return new ModelAndView("sourceList", "sources", sources);
     }
 
-    @RequestMapping(value="/sources/{sourceName}")
+    @RequestMapping(value="/{sourceName}")
     public ModelAndView showSourceByName(@PathVariable("sourceName")String sourceName) {
         Source source = sourceService.findSourceByName(sourceName);
         return new ModelAndView("sourceItem", "source", source);
     }
 
-    @RequestMapping(value="/sources/perform_save_item")
+    @RequestMapping(value = "/add")
+    public ModelAndView showAddFrom() {
+        Source source = new Source();
+        return new ModelAndView("sourceItem", "source", source);
+    }
+
+    @RequestMapping(value="/perform_save_item")
     public String edit(@ModelAttribute("source") Source source, BindingResult result, Model model) {
         Source sourcePersisted = sourceService.persist(source);
         model.addAttribute(sourcePersisted);
