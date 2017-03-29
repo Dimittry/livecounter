@@ -1,5 +1,6 @@
 package com.livecounter.service.impl;
 
+import com.livecounter.helpers.GrabberParser;
 import com.livecounter.persistence.dao.SourceRepo;
 import com.livecounter.persistence.model.Source;
 import com.livecounter.service.GrabberService;
@@ -20,8 +21,11 @@ public class GrabberServiceImpl implements GrabberService{
     @Autowired
     private SourceRepo sourceRepo;
 
-    public Map<String, List<String>> readAll() {
-        Map<String, List<String>> result = new HashMap<>();
+    @Autowired
+    private GrabberParser grabberParser;
+
+    public Map<Source, List<String>> readAll() {
+        Map<Source, List<String>> result = new HashMap<>();
         List<Source> sources = sourceRepo.findAll();
 
         for (Source source : sources) {
@@ -35,12 +39,13 @@ public class GrabberServiceImpl implements GrabberService{
                 while((inputLine = in.readLine()) != null) {
                     sourceData.add(inputLine);
                 }
-                result.put(source.getName(), sourceData);
+                result.put(source, sourceData);
                 in.close();
             } catch(IOException e) {
                 System.out.println(e.getMessage());
             }
         }
+        grabberParser.parse(result);
         return result;
     }
 }
