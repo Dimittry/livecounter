@@ -13,6 +13,9 @@ public class SourceDto {
     @NotNull
     private String name;
 
+    @NotNull
+    private String checkName;
+
     public Long getId() {
         return id;
     }
@@ -35,6 +38,14 @@ public class SourceDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCheckName() {
+        return checkName;
+    }
+
+    public void setCheckName(String checkName) {
+        this.checkName = checkName;
     }
 
     @Override
