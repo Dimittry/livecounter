@@ -13,6 +13,9 @@ public class Source {
 
     private String name;
 
+    @Column(name = "check_name")
+    private String checkName;
+
     public Source() {
         super();
     }
@@ -41,6 +44,14 @@ public class Source {
         this.name = name;
     }
 
+    public String getCheckName() {
+        return checkName;
+    }
+
+    public void setCheckName(String checkName) {
+        this.checkName = checkName;
+    }
+
     public boolean isNew() {
         return (id == null);
     }
@@ -59,5 +70,15 @@ public class Source {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Source{" +
+                "id=" + id +
+                ", address='" + address + '\'' +
+                ", name='" + name + '\'' +
+                ", checkName='" + checkName + '\'' +
+                '}';
     }
 }
