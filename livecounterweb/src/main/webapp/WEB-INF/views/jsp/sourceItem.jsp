@@ -44,6 +44,11 @@
                             <sf:input path="address" type="text" />
                         </div>
                     </div>
+                    <div class="field">
+                        <div class="ui input fluid">
+                            <sf:input path="checkName" type="text" />
+                        </div>
+                    </div>
                     <input name="submit" class="ui primary button fluid " type="submit" value="submit" />
                 </sf:form>
             </div>
