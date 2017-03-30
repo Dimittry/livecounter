@@ -1,5 +1,6 @@
 package com.livecounter.helpers.impl;
 
+import com.livecounter.exceptions.MetricParseException;
 import com.livecounter.helpers.GrabberParser;
 import com.livecounter.persistence.model.Source;
 import com.livecounter.persistence.model.SourceData;
@@ -33,7 +34,10 @@ public class GrabberParserImpl implements GrabberParser {
             System.out.println(sourceDetails);
             boolean isCorrectDetails = validate(sourceDetails, source.getCheckName());
             if(isCorrectDetails == true) {
-
+                System.out.println("validated");
+                extractValues(sourceDetails);
+            } else {
+                System.out.println("unvalidated");
             }
             System.out.println(item.getKey());
         }
@@ -47,19 +51,24 @@ public class GrabberParserImpl implements GrabberParser {
         if(checkName == null) {
             throw new IllegalStateException("Wrong check name.");
         }
-        return (checkName.contains(details.get(0)));
+        System.out.println(checkName);
+        System.out.println(details.get(0));
+        return (details.get(0).contains(checkName));
     }
 
     private void extractValues(final List<String> details) {
         for(String detail : details) {
-
+            checkForMetrics(detail);
         }
     }
 
     private void checkForMetrics(final String detail) {
         for(Map.Entry<String, String> metric : metricsName.entrySet()) {
+            int metricValue = 0;
             if(detail.contains(metric.getValue())) {
-
+                metricValue = extractMetricValue(detail);
+                System.out.println(metric.getKey());
+                System.out.println(metricValue);
             }
         }
     }
@@ -67,9 +76,14 @@ public class GrabberParserImpl implements GrabberParser {
     private int extractMetricValue(final String metric) {
         String[] parts = metric.split("=");
         if(parts.length != PARTS_IN_METRIC) {
-            throw new IllegalStateException("Wrong metric: " + metric);
+            throw new MetricParseException("Wrong metric: " + metric);
         }
-        //TODO get number
-        return 0;
+        int metricValue;
+        try {
+            metricValue = Integer.valueOf(parts[1].replace(";", "").trim());
+        } catch(NumberFormatException e) {
+            throw new MetricParseException("Wrong metric: " + metric);
+        }
+        return metricValue;
     }
 }

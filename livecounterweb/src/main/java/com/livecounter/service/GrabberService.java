@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface GrabberService {
-    Map<String, List<String>> readAll();
+    Map<Source, List<String>> readAll();
 }
