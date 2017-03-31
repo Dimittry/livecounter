@@ -1,6 +1,7 @@
 package com.livecounter.helpers.impl;
 
 import com.livecounter.exceptions.MetricParseException;
+import com.livecounter.factory.LiveInternetSourceCreator;
 import com.livecounter.helpers.GrabberParser;
 import com.livecounter.persistence.model.Source;
 import com.livecounter.persistence.model.SourceData;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class GrabberParserImpl implements GrabberParser {
@@ -33,13 +35,16 @@ public class GrabberParserImpl implements GrabberParser {
             List<String> sourceDetails = item.getValue();
             System.out.println(sourceDetails);
             boolean isCorrectDetails = validate(sourceDetails, source.getCheckName());
+            Map<String, Long> metricValuesForSource = new HashMap<>();
             if(isCorrectDetails == true) {
                 System.out.println("validated");
-                extractValues(sourceDetails);
+                metricValuesForSource = extractValues(sourceDetails);
+                List<SourceData> sourceDatas = LiveInternetSourceCreator.createAll(metricValuesForSource, source);
+                System.out.println(sourceDatas);
             } else {
                 System.out.println("unvalidated");
             }
-            System.out.println(item.getKey());
+            System.out.println(metricValuesForSource);
         }
         return new SourceData();
     }
@@ -56,29 +61,32 @@ public class GrabberParserImpl implements GrabberParser {
         return (details.get(0).contains(checkName));
     }
 
-    private void extractValues(final List<String> details) {
+    private Map<String, Long> extractValues(final List<String> details) {
+        Map<String, Long> metricValues = new HashMap<>();
         for(String detail : details) {
-            checkForMetrics(detail);
+            metricValues.putAll(checkForMetrics(detail));
         }
+        return metricValues;
     }
 
-    private void checkForMetrics(final String detail) {
+    private Map<String, Long> checkForMetrics(final String detail) {
+        Map<String, Long> result = new HashMap<>();
         for(Map.Entry<String, String> metric : metricsName.entrySet()) {
-            int metricValue = 0;
+            long metricValue;
             if(detail.contains(metric.getValue())) {
                 metricValue = extractMetricValue(detail);
-                System.out.println(metric.getKey());
-                System.out.println(metricValue);
+                result.put(metric.getKey(), metricValue);
             }
         }
+        return result;
     }
 
-    private int extractMetricValue(final String metric) {
+    private long extractMetricValue(final String metric) {
         String[] parts = metric.split("=");
         if(parts.length != PARTS_IN_METRIC) {
             throw new MetricParseException("Wrong metric: " + metric);
         }
-        int metricValue;
+        long metricValue;
         try {
             metricValue = Integer.valueOf(parts[1].replace(";", "").trim());
         } catch(NumberFormatException e) {
