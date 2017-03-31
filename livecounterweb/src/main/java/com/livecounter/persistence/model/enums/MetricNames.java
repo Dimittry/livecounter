@@ -12,14 +12,20 @@ public enum MetricNames {
     MONTH_HITS("monthHits", 5),
     MONTH_VISITS("monthVisits", 6);
 
-    private Map<String, Integer> nameCodeMap = new HashMap<>();
+    private String metricName;
+    private int metricCode;
 
     MetricNames(final String metricName, final Integer metricCode) {
-        nameCodeMap.put(metricName, metricCode);
+        this.metricName =  metricName;
+        this.metricCode = metricCode;
     }
 
-    public Map<String, Integer> getNameCodeMap() {
-        return nameCodeMap;
+    public String getMetricName() {
+        return metricName;
+    }
+
+    public int getMetricCode() {
+        return metricCode;
     }
 
 }
