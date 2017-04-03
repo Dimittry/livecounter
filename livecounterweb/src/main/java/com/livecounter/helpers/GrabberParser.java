@@ -8,5 +8,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface GrabberParser {
-    SourceData parse(final Map<Source, List<String>> sourceListMap);
+    List<SourceData> parse(final Map<Source, List<String>> sourceListMap);
 }

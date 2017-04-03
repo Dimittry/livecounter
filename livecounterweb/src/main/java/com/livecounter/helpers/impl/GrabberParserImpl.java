@@ -28,25 +28,22 @@ public class GrabberParserImpl implements GrabberParser {
     }
 
     @Override
-    public SourceData parse(final Map<Source, List<String>> sourceListMap) {
+    public List<SourceData> parse(final Map<Source, List<String>> sourceListMap) {
         List<SourceData> result = new ArrayList<>();
         for(Map.Entry<Source, List<String>> item : sourceListMap.entrySet()) {
+            List<SourceData> sourceDatas = new ArrayList<>();
             Source source = item.getKey();
             List<String> sourceDetails = item.getValue();
-            System.out.println(sourceDetails);
             boolean isCorrectDetails = validate(sourceDetails, source.getCheckName());
             Map<String, Long> metricValuesForSource = new HashMap<>();
             if(isCorrectDetails == true) {
-                System.out.println("validated");
                 metricValuesForSource = extractValues(sourceDetails);
-                List<SourceData> sourceDatas = LiveInternetSourceCreator.createAll(metricValuesForSource, source);
-                System.out.println(sourceDatas);
+                sourceDatas = LiveInternetSourceCreator.createAll(metricValuesForSource, source);
+                result.addAll(sourceDatas);
             } else {
-                System.out.println("unvalidated");
             }
-            System.out.println(metricValuesForSource);
         }
-        return new SourceData();
+        return result;
     }
 
     private boolean validate(final List<String> details, final String checkName) {
@@ -56,8 +53,6 @@ public class GrabberParserImpl implements GrabberParser {
         if(checkName == null) {
             throw new IllegalStateException("Wrong check name.");
         }
-        System.out.println(checkName);
-        System.out.println(details.get(0));
         return (details.get(0).contains(checkName));
     }
 
