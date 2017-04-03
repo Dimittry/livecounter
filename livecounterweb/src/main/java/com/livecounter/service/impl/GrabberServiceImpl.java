@@ -3,6 +3,7 @@ package com.livecounter.service.impl;
 import com.livecounter.helpers.GrabberParser;
 import com.livecounter.persistence.dao.SourceRepo;
 import com.livecounter.persistence.model.Source;
+import com.livecounter.persistence.model.SourceData;
 import com.livecounter.service.GrabberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,6 @@ public class GrabberServiceImpl implements GrabberService{
                 System.out.println(e.getMessage());
             }
         }
-        grabberParser.parse(result);
         return result;
     }
 }
