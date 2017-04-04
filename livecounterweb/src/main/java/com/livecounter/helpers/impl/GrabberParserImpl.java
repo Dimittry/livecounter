@@ -11,12 +11,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
 public class GrabberParserImpl implements GrabberParser {
     private static Map<String, String> metricsName = new HashMap<>();
     private static final int PARTS_IN_METRIC = 2;
+    private static final String DAY_FILTER = "day";
+
 
     static {
         metricsName.put("monthHits", "month_hit");
@@ -46,6 +49,28 @@ public class GrabberParserImpl implements GrabberParser {
         return result;
     }
 
+    /**
+     * Parses only days metrics.
+     * @return
+     */
+    public List<SourceData> parseDays(final Map<Source, List<String>> sourceListMap) {
+        List<SourceData> result = new ArrayList<>();
+        for(Map.Entry<Source, List<String>> item : sourceListMap.entrySet()) {
+            List<SourceData> sourceDatas = new ArrayList<>();
+            Source source = item.getKey();
+            List<String> sourceDetails = item.getValue();
+            boolean isCorrectDetails = validate(sourceDetails, source.getCheckName());
+            Map<String, Long> metricValuesForSource = new HashMap<>();
+            if(isCorrectDetails == true) {
+                metricValuesForSource = extractDayValues(sourceDetails);
+                sourceDatas = LiveInternetSourceCreator.createAll(metricValuesForSource, source);
+                result.addAll(sourceDatas);
+            } else {
+            }
+        }
+        return result;
+    }
+
     private boolean validate(final List<String> details, final String checkName) {
         if(details.isEmpty()) {
             throw new IllegalStateException("Empty source details list.");
@@ -64,6 +89,18 @@ public class GrabberParserImpl implements GrabberParser {
         return metricValues;
     }
 
+    private Map<String, Long> extractDayValues(final List<String> details) {
+        Map<String, Long> metricValues = new HashMap<>();
+        for(String detail : details) {
+            Map<String, Long> checkedMetrics = checkForMetrics(detail);
+            Map<String, Long> filteredMetrics = filter(checkedMetrics, DAY_FILTER);
+            metricValues.putAll(filteredMetrics);
+        }
+        System.out.println("metricValues");
+        System.out.println(metricValues);
+        return metricValues;
+    }
+
     private Map<String, Long> checkForMetrics(final String detail) {
         Map<String, Long> result = new HashMap<>();
         for(Map.Entry<String, String> metric : metricsName.entrySet()) {
@@ -72,6 +109,15 @@ public class GrabberParserImpl implements GrabberParser {
                 metricValue = extractMetricValue(detail);
                 result.put(metric.getKey(), metricValue);
             }
+        }
+        return result;
+    }
+
+    private Map<String, Long> filter(final Map<String, Long> metrics, final String filter) {
+        Map<String, Long> result = new HashMap<>();
+        if(filter != null) {
+            result = metrics.entrySet().stream().filter(map -> map.getKey().contains(filter))
+                    .collect(Collectors.toMap(p ->p.getKey(), p -> p.getValue()));
         }
         return result;
     }

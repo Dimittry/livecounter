@@ -9,4 +9,5 @@ import java.util.Map;
 
 public interface GrabberParser {
     List<SourceData> parse(final Map<Source, List<String>> sourceListMap);
+    List<SourceData> parseDays(final Map<Source, List<String>> sourceListMap);
 }
