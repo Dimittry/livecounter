@@ -7,7 +7,9 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:/META-INF/application-config.xml
-            classpath*:/META-INF/application-config-security.xml</param-value>
+            classpath*:/META-INF/application-config-security.xml
+            classpath*:/META-INF/scheduler-config.xml
+        </param-value>
     </context-param>
 
     <!--web context-->
