@@ -12,25 +12,27 @@ import java.util.List;
 @Repository
 public class SourceRepoImpl extends BaseRepoImpl implements SourceRepo {
 
-    @Autowired
-    public SourceRepoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory);
-    }
+    public SourceRepoImpl() {
 
+    }
     @Override
     public List<Source> findAll() {
-        return session().createQuery("from Source s").list();
+        return em.createQuery("from Source s").getResultList();
     }
 
     @Override
     public Source findSourceByName(String name) {
-        return (Source)session().createQuery("from Source s where s.name = :name")
+        return (Source)em.createQuery("from Source s where s.name = :name")
                 .setParameter("name", name).getSingleResult();
     }
 
     @Override
     public Source persist(final Source source) {
-        session().saveOrUpdate(source);
-        return source;
+        if(source.isNew()) {
+            em.persist(source);
+            return source;
+        } else {
+            return em.merge(source);
+        }
     }
 }

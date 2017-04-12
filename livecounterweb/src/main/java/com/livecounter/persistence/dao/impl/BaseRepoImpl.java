@@ -6,17 +6,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 @Repository
 @Transactional
 abstract public class BaseRepoImpl {
-    private SessionFactory sessionFactory;
+    @PersistenceContext
+    protected EntityManager em;
 
-    @Autowired
-    public BaseRepoImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public BaseRepoImpl() {
+
     }
 
-    protected Session session() {
-        return sessionFactory.getCurrentSession();
-    }
+//    private SessionFactory sessionFactory;
+//
+//    @Autowired
+//    public BaseRepoImpl(SessionFactory sessionFactory) {
+//        this.sessionFactory = sessionFactory;
+//    }
+//
+//    protected Session session() {
+//        return sessionFactory.getCurrentSession();
+//    }
 }

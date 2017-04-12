@@ -14,25 +14,20 @@ import java.util.List;
 @Repository
 public class SourceDataRepoImpl extends BaseRepoImpl implements SourceDataRepo {
 
-    @Autowired
-    public SourceDataRepoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory);
-    }
-
     @Override
     public SourceData save(final SourceData sourceData) {
-        session().saveOrUpdate(sourceData);
+//        em.saveOrUpdate(sourceData);
         return sourceData;
     }
 
     @Override
     @Transactional
     public void saveAll(final List<SourceData> sourceDatas) {
-        Session session = session();
-        for(int i = 0; i < sourceDatas.size(); i++) {
-            session.save(sourceDatas.get(i));
-        }
-        session.flush();
-        session.clear();
+//        Session session = session();
+//        for(int i = 0; i < sourceDatas.size(); i++) {
+//            session.save(sourceDatas.get(i));
+//        }
+//        session.flush();
+//        session.clear();
     }
 }

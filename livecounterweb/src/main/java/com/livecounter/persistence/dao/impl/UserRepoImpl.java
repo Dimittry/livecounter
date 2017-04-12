@@ -17,26 +17,21 @@ import java.util.List;
 @Transactional
 public class UserRepoImpl extends BaseRepoImpl implements UserRepo {
 
-    @Autowired
-    public UserRepoImpl(SessionFactory sessionFactory) {
-        super(sessionFactory);
-    }
-
     @Override
     public List<User> findAll() {
-        return session().createQuery("from User u").list();
+        return em.createQuery("from User u").getResultList();
     }
 
     @Override
     public User findByEmail(final String email) {
         List<User> users =
-                (List<User>)session().createQuery("from User u where email = :email").setParameter("email", email).list();
+                (List<User>)em.createQuery("from User u where email = :email").setParameter("email", email).getResultList();
         return (users.size() > 0) ? users.get(0) : null;
     }
 
     @Override
     public User save(final User user) {
-        session().persist(user);
+        em.persist(user);
         return user;
     }
 
