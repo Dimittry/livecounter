@@ -1,6 +1,7 @@
 package com.livecounter.persistence.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "sources")
@@ -15,6 +16,9 @@ public class Source {
 
     @Column(name = "check_name")
     private String checkName;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "source")
+    private List<SourceData> sourceDataList;
 
     public Source() {
         super();
@@ -60,11 +64,8 @@ public class Source {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Source source = (Source) o;
-
         return id != null ? id.equals(source.id) : source.id == null;
-
     }
 
     @Override

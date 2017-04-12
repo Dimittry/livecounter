@@ -10,8 +10,10 @@ public class SourceData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id_source")
-    private Long idSource;
+//    @Column(name = "id_source")
+    @ManyToOne
+    @JoinColumn(name = "id_source")
+    private Source source;
 
     private Date day;
 
@@ -33,12 +35,12 @@ public class SourceData {
         this.id = id;
     }
 
-    public Long getIdSource() {
-        return idSource;
+    public Source getIdSource() {
+        return source;
     }
 
-    public void setIdSource(Long idSource) {
-        this.idSource = idSource;
+    public void setSource(Source source) {
+        this.source = source;
     }
 
     public Date getDay() {
@@ -71,5 +73,17 @@ public class SourceData {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    @Override
+    public String toString() {
+        return "SourceData{" +
+                "id=" + id +
+                ", Source=" + source +
+                ", day=" + day +
+                ", type=" + type +
+                ", value=" + value +
+                ", created=" + created +
+                '}';
     }
 }
