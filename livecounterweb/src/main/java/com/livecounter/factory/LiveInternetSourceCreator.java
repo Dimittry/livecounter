@@ -24,7 +24,8 @@ public class LiveInternetSourceCreator {
         for(Map.Entry<String, Long> item : metricValues.entrySet()) {
             SourceData sd = new SourceData();
             int metricCode =  defineMetricCode(item.getKey());
-            sd.setIdSource(source.getId());
+//            sd.setIdSource(source.getId());
+            sd.setSource(source);
             sd.setType(metricCode);
             sd.setValue(item.getValue());
             sd.setDay(new Date());

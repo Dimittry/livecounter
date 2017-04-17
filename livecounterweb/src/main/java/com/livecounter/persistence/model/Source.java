@@ -56,6 +56,10 @@ public class Source {
         this.checkName = checkName;
     }
 
+    public List<SourceData> getSourceData() {
+        return sourceDataList;
+    }
+
     public boolean isNew() {
         return (id == null);
     }

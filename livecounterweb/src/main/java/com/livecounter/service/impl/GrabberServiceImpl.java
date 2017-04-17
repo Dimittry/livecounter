@@ -1,9 +1,7 @@
 package com.livecounter.service.impl;
 
-import com.livecounter.helpers.GrabberParser;
 import com.livecounter.persistence.dao.SourceRepo;
 import com.livecounter.persistence.model.Source;
-import com.livecounter.persistence.model.SourceData;
 import com.livecounter.service.GrabberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,13 +20,9 @@ public class GrabberServiceImpl implements GrabberService{
     @Autowired
     private SourceRepo sourceRepo;
 
-    @Autowired
-    private GrabberParser grabberParser;
-
     public Map<Source, List<String>> readAll() {
         Map<Source, List<String>> result = new HashMap<>();
         List<Source> sources = sourceRepo.findAll();
-
         for (Source source : sources) {
             List<String> sourceData = new ArrayList<>();
             try {
@@ -48,4 +42,5 @@ public class GrabberServiceImpl implements GrabberService{
         }
         return result;
     }
+
 }
