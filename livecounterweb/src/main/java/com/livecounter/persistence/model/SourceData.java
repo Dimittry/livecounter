@@ -1,11 +1,18 @@
 package com.livecounter.persistence.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
-
+@NamedQueries({
+    @NamedQuery(
+            name = SourceData.FIND_BETWEEN_DATES,
+            query = "from SourceData sd where sd.day BETWEEN :startDate and :endDate"
+    )
+})
 @Entity
 @Table(name = "source_data")
 public class SourceData {
+    public static final String FIND_BETWEEN_DATES = "SourceData.findBetweenDates";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,13 +22,13 @@ public class SourceData {
     @JoinColumn(name = "id_source")
     private Source source;
 
-    private Date day;
+    private LocalDate day;
 
     private Integer type;
 
     private Long value;
 
-    private Date created;
+    private LocalDate created;
 
     public SourceData() {
         super();
@@ -43,11 +50,11 @@ public class SourceData {
         this.source = source;
     }
 
-    public Date getDay() {
+    public LocalDate getDay() {
         return day;
     }
 
-    public void setDay(Date day) {
+    public void setDay(LocalDate day) {
         this.day = day;
     }
 
@@ -67,11 +74,11 @@ public class SourceData {
         this.value = value;
     }
 
-    public Date getCreated() {
+    public LocalDate getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(LocalDate created) {
         this.created = created;
     }
 
