@@ -10,6 +10,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -32,5 +35,12 @@ public class SourceDataRepoImpl extends BaseRepoImpl implements SourceDataRepo {
                 em.clear();
             }
         }
+    }
+
+    public List<SourceData> getByStartEndDate(final LocalDate startDate, final LocalDate endDate) {
+        return em.createNamedQuery(SourceData.FIND_BETWEEN_DATES, SourceData.class)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getResultList();
     }
 }
