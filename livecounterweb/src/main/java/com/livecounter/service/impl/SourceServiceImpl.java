@@ -7,6 +7,7 @@ import com.livecounter.service.SourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -28,5 +29,9 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public Source persist(final Source source) {
         return sourceRepo.persist(source);
+    }
+
+    public List<Source> getByStartEndDate(final LocalDate startDate, final LocalDate endDate) {
+        return sourceRepo.getByStartEndDate(startDate, endDate);
     }
 }
