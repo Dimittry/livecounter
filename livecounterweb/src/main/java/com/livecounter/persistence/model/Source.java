@@ -1,11 +1,21 @@
 package com.livecounter.persistence.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-
+@NamedQueries(
+        @NamedQuery(name = Source.FIND_BETWEEN_DATES,
+//        query = "select s from Source as s" +
+            query = "select distinct s from Source s " +
+                "join fetch s.sourceDataList as sdl " +
+                "where sdl.day BETWEEN :startDate and :endDate"
+        )
+)
 @Entity
 @Table(name = "sources")
 public class Source {
+    public static final String FIND_BETWEEN_DATES = "Source.findBetweenDates3";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,8 +27,8 @@ public class Source {
     @Column(name = "check_name")
     private String checkName;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "source")
-    private List<SourceData> sourceDataList;
+    @OneToMany(mappedBy = "source")
+    private List<SourceData> sourceDataList = new ArrayList<>();
 
     public Source() {
         super();
