@@ -1,5 +1,9 @@
 package com.livecounter.persistence.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +17,9 @@ import java.util.List;
 )
 @Entity
 @Table(name = "sources")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Source {
     public static final String FIND_BETWEEN_DATES = "Source.findBetweenDates3";
 
@@ -28,6 +35,7 @@ public class Source {
     private String checkName;
 
     @OneToMany(mappedBy = "source")
+    @JsonBackReference
     private List<SourceData> sourceDataList = new ArrayList<>();
 
     public Source() {

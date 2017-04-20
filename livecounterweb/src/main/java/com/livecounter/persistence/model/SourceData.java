@@ -1,5 +1,9 @@
 package com.livecounter.persistence.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
@@ -11,15 +15,20 @@ import java.util.Date;
 })
 @Entity
 @Table(name = "source_data")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class SourceData {
     public static final String FIND_BETWEEN_DATES = "SourceData.findBetweenDates";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 //    @Column(name = "id_source")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_source")
+    @JsonManagedReference
     private Source source;
 
     private LocalDate day;
@@ -42,7 +51,7 @@ public class SourceData {
         this.id = id;
     }
 
-    public Source getIdSource() {
+    public Source getSource() {
         return source;
     }
 
