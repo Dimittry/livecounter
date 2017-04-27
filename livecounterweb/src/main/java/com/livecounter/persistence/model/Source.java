@@ -2,6 +2,7 @@ package com.livecounter.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
@@ -34,9 +35,9 @@ public class Source {
     @Column(name = "check_name")
     private String checkName;
 
-    @OneToMany(mappedBy = "source")
+    @OneToMany(mappedBy = "source", fetch = FetchType.LAZY)
     @JsonBackReference
-    private List<SourceData> sourceDataList = new ArrayList<>();
+    private List<SourceData> sourceDataList= new ArrayList<>();
 
     public Source() {
         super();
