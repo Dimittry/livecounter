@@ -1,7 +1,11 @@
 package com.livecounter.web.dto;
 
 
+import com.livecounter.persistence.model.SourceData;
+
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SourceDto {
 
@@ -15,6 +19,8 @@ public class SourceDto {
 
     @NotNull
     private String checkName;
+
+    private List<SourceDataDto> sourceDataList = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -48,11 +54,22 @@ public class SourceDto {
         this.checkName = checkName;
     }
 
+    public void setSourceData(final List<SourceDataDto> sourceDataList) {
+        this.sourceDataList = sourceDataList;
+    }
+
+    public List<SourceDataDto> getSourceData() {
+        return sourceDataList;
+    }
+
     @Override
     public String toString() {
         return "SourceDto{" +
-                "address='" + address + '\'' +
+                "id=" + id +
+                ", address='" + address + '\'' +
                 ", name='" + name + '\'' +
+                ", checkName='" + checkName + '\'' +
+                ", sourceDataList=" + sourceDataList +
                 '}';
     }
 }
