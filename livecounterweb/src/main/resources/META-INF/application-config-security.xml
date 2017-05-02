@@ -12,6 +12,8 @@
     <http>
         <intercept-url pattern="/resources/**" access="permitAll"/>
         <intercept-url pattern="/login*" access="isAnonymous()"/>
+        <intercept-url pattern="/" access="permitAll"/>
+        <intercept-url pattern="/tests" access="permitAll"/>
         <intercept-url pattern="/**"
                        access="hasAnyRole('ROLE_CUSTOMER_user', 'ROLE_ADMIN')" />
         <form-login
