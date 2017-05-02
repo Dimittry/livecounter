@@ -11,12 +11,14 @@ export default class MyLineChart extends React.Component {
 
     componentDidMount() {
         // var  ctx = document.getElementById("myChart");
+        let chartCanvas = this.refs.chart;
+
         axios.get('http://localhost:8080/tests')
             .then(res => {
                 console.log(res);
                 // const posts = res.data.data.children.map(obj => obj.data);
                 // this.setState({ posts });
-                let type = 3;
+                let type = 5;
                 let datasets = [];
                 let labels = [];
                 res.data.map(source => {
@@ -34,25 +36,28 @@ export default class MyLineChart extends React.Component {
                 });
                 console.log(datasets);
                 console.log(labels);
+                var myChart = new Chart(chartCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: datasets
+                            // [
+                        // {
+                        //     label: 'apples',
+                        //     data: [12, 19, 3, 17, 6, 3, 7],
+                        //     backgroundColor: "rgba(153,255,51,0.4)"
+                        // }, {
+                        //     label: 'oranges',
+                        //     data: [2, 29, 5, 5, 2, 3, 10],
+                        //     backgroundColor: "rgba(255,153,0,0.4)"
+                        // }
+                        // ]
+                    }
+                });
+                this.setState({chart: myChart});
             });
-        let chartCanvas = this.refs.chart;
 
-        var myChart = new Chart(chartCanvas, {
-            type: 'line',
-            data: {
-                labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-                datasets: [{
-                    label: 'apples',
-                    data: [12, 19, 3, 17, 6, 3, 7],
-                    backgroundColor: "rgba(153,255,51,0.4)"
-                }, {
-                    label: 'oranges',
-                    data: [2, 29, 5, 5, 2, 3, 10],
-                    backgroundColor: "rgba(255,153,0,0.4)"
-                }]
-            }
-        });
-        this.setState({chart: myChart});
+
     }
 
     render() {
