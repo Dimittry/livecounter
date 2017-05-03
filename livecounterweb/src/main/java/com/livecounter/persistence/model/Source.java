@@ -13,7 +13,7 @@ import java.util.List;
 //        query = "select s from Source as s" +
             query = "select distinct s from Source s " +
                 "join fetch s.sourceDataList as sdl " +
-                "where sdl.day BETWEEN :startDate and :endDate"
+                "where sdl.day BETWEEN :startDate and :endDate and sdl.type = 5 order by sdl.day desc "
         )
 )
 @Entity
@@ -34,6 +34,8 @@ public class Source {
 
     @Column(name = "check_name")
     private String checkName;
+
+    private String color;
 
     @OneToMany(mappedBy = "source", fetch = FetchType.LAZY)
     @JsonBackReference
@@ -81,6 +83,14 @@ public class Source {
 
     public boolean isNew() {
         return (id == null);
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     @Override
