@@ -20,6 +20,8 @@ public class SourceDto {
     @NotNull
     private String checkName;
 
+    private String color;
+
     private List<SourceDataDto> sourceDataList = new ArrayList<>();
 
     public Long getId() {
@@ -60,6 +62,14 @@ public class SourceDto {
 
     public List<SourceDataDto> getSourceData() {
         return sourceDataList;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     @Override
