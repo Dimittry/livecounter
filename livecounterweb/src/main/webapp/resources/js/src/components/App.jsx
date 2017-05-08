@@ -1,8 +1,11 @@
 import React from 'react';
+import {Switch} from 'react-router';
+import {Route} from 'react-router-dom';
+
 import { Button } from 'react-bootstrap';
 import Navigation from './Navigation.jsx';
-import Sidebar from './Sidebar.jsx';
-import MainView from './MainView.jsx';
+import HomePage from './HomePage.jsx';
+
 
 
 export default class App extends React.Component {
@@ -13,8 +16,9 @@ export default class App extends React.Component {
                 <Navigation />
                 <div className="container-fluid">
                     <div className="row">
-                        <Sidebar />
-                        <MainView />
+                        <Switch>
+                            <Route exact path="/" component={HomePage}/>
+                        </Switch>
                     </div>
                 </div>
             </div>
