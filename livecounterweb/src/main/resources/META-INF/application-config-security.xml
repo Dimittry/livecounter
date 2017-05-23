@@ -1,46 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/security"
+<beans xmlns="http://www.springframework.org/schema/beans"
              xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns:security="http://www.springframework.org/schema/c"
+             xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+             xmlns:sec="http://www.springframework.org/schema/security"
              xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/security
-           http://www.springframework.org/schema/security/spring-security.xsd">
+           http://www.springframework.org/schema/security/spring-security.xsd
+            http://www.springframework.org/schema/security/oauth2
+            http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
 
-    <http pattern="/favicon.ico" security="none"/>
-    <http>
-        <intercept-url pattern="/resources/**" access="permitAll"/>
-        <intercept-url pattern="/login*" access="isAnonymous()"/>
-        <intercept-url pattern="/" access="permitAll"/>
-        <intercept-url pattern="/tests" access="permitAll"/>
-        <intercept-url pattern="/**"
-                       access="hasAnyRole('ROLE_CUSTOMER_user', 'ROLE_ADMIN')" />
-        <form-login
-            login-page="/login"
-            default-target-url="/users/registration"
-            authentication-failure-url="/login?error=true"
-            login-processing-url="/perform_login"
-        />
-        <logout logout-success-url="/login"/>
-        <remember-me />
-        <headers>
-            <cache-control />
-            <xss-protection />
-        </headers>
-    </http>
+    <sec:http pattern="/favicon.ico" security="none"/>
+    <!--<http>-->
+        <!--<intercept-url pattern="/resources/**" access="permitAll"/>-->
+        <!--<intercept-url pattern="/login*" access="isAnonymous()"/>-->
+        <!--<intercept-url pattern="/" access="permitAll"/>-->
+        <!--<intercept-url pattern="/tests" access="permitAll"/>-->
+        <!--<intercept-url pattern="/**"-->
+                       <!--access="hasAnyRole('ROLE_CUSTOMER_user', 'ROLE_ADMIN')" />-->
+        <!--<http-basic />-->
+        <!--<csrf disabled="true"/>-->
+        <!--&lt;!&ndash;<form-login&ndash;&gt;-->
+            <!--&lt;!&ndash;login-page="/login"&ndash;&gt;-->
+            <!--&lt;!&ndash;default-target-url="/users/registration"&ndash;&gt;-->
+            <!--&lt;!&ndash;authentication-failure-url="/login?error=true"&ndash;&gt;-->
+            <!--&lt;!&ndash;login-processing-url="/perform_login"&ndash;&gt;-->
+        <!--&lt;!&ndash;/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<logout logout-success-url="/login"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<remember-me />&ndash;&gt;-->
+        <!--&lt;!&ndash;<headers>&ndash;&gt;-->
+            <!--&lt;!&ndash;<cache-control />&ndash;&gt;-->
+            <!--&lt;!&ndash;<xss-protection />&ndash;&gt;-->
+        <!--&lt;!&ndash;</headers>&ndash;&gt;-->
+    <!--</http>-->
 
-    <authentication-manager>
-        <!--<authentication-provider>-->
-            <!--<user-service>-->
-                <!--<user name="admin" password="admin" authorities="ROLE_ADMIN" />-->
-                <!--<user name="cust1" password="cust1" authorities="ROLE_CUSTOMER" />-->
-                <!--<user name="cust2" password="cust2" authorities="ROLE_CUSTOMER" />-->
-            <!--</user-service>-->
-        <!--</authentication-provider>-->
-        <authentication-provider user-service-ref="userDetailsService"/>
-    </authentication-manager>
+    <!--<authentication-manager>-->
+        <!--&lt;!&ndash;<authentication-provider>&ndash;&gt;-->
+            <!--&lt;!&ndash;<user-service>&ndash;&gt;-->
+                <!--&lt;!&ndash;<user name="admin" password="admin" authorities="ROLE_ADMIN" />&ndash;&gt;-->
+                <!--&lt;!&ndash;<user name="cust1" password="cust1" authorities="ROLE_CUSTOMER" />&ndash;&gt;-->
+                <!--&lt;!&ndash;<user name="cust2" password="cust2" authorities="ROLE_CUSTOMER" />&ndash;&gt;-->
+            <!--&lt;!&ndash;</user-service>&ndash;&gt;-->
+        <!--&lt;!&ndash;</authentication-provider>&ndash;&gt;-->
+        <!--<authentication-provider user-service-ref="userDetailsService"/>-->
+    <!--</authentication-manager>-->
     <beans:bean id="userDetailsService" class="com.livecounter.security.CustomCounterUserDetailsService"/>
 
-    <global-method-security secured-annotations="enabled" />
-</beans:beans>
+    <sec:global-method-security secured-annotations="enabled" />
+
+
+
+    <sec:http pattern="/oauth/token" create-session="stateless" authentication-manager-ref="clientAuthenticationManager">
+        <sec:intercept-url pattern="/oauth/token" access="isFullyAuthenticated()"/>
+        <sec:http-basic entry-point-ref="clientAuthenticationEntryPoint"/>
+
+        <sec:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER"/>
+
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+
+        <sec:anonymous enabled="false"/>
+        <sec:csrf disabled="true"/>
+    </sec:http>
+
+    <sec:http pattern="/profile**" create-session="never" entry-point-ref="oauthAuthenticationEntryPoint">
+        <sec:intercept-url pattern="/profile**" access="hasRole('ROLE_USER')"/>
+
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+
+        <sec:anonymous enabled="false"/>
+        <sec:csrf disabled="true"/>
+    </sec:http>
+
+    <beans:bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+        <property name="realmName" value="myapp"/>
+    </beans:bean>
+
+    <beans:bean id="clientAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+        <property name="realmName" value="myapp/client"/>
+        <property name="typeName" value="Basic"/>
+    </beans:bean>
+
+    <beans:bean id="oauthAccessDeniedHandler" class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler"/>
+
+    <beans:bean id="clientCredentialsTokenEndpointFilter" class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <property name="authenticationManager" ref="clientAuthenticationManager"/>
+    </beans:bean>
+
+    <beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
+        <constructor-arg>
+            <list>
+                <beans:bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter"/>
+                <beans:bean class="org.springframework.security.access.vote.RoleVoter"/>
+                <beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+            </list>
+        </constructor-arg>
+    </beans:bean>
+
+    <sec:authentication-manager id="clientAuthenticationManager">
+        <sec:authentication-provider user-service-ref="clientDetailsUserService"/>
+    </sec:authentication-manager>
+
+    <beans:bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+        <constructor-arg ref="clientDetails"/>
+    </beans:bean>
+
+    <beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+    <sec:authentication-manager id="authenticationManager">
+        <!--<sec:authentication-provider>-->
+            <!--<sec:user-service>-->
+                <!--<sec:user name="admin" password="supersecret" authorities="ROLE_USER,ROLE_ADMIN"/>-->
+            <!--</sec:user-service>-->
+        <!--</sec:authentication-provider>-->
+        <sec:authentication-provider user-service-ref="userDetailsService"/>
+    </sec:authentication-manager>
+
+    <beans:bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore"/>
+
+    <beans:bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+        <property name="tokenStore" ref="tokenStore"/>
+        <property name="supportRefreshToken" value="true"/>
+        <property name="accessTokenValiditySeconds" value="3600"/>
+        <property name="clientDetailsService" ref="clientDetails"/>
+    </beans:bean>
+
+    <oauth:authorization-server client-details-service-ref="clientDetails" token-services-ref="tokenServices">
+        <oauth:refresh-token/>
+        <oauth:password/>
+    </oauth:authorization-server>
+
+    <oauth:resource-server id="resourceServerFilter" resource-id="myapp" token-services-ref="tokenServices"/>
+
+    <oauth:client-details-service id="clientDetails">
+        <oauth:client client-id="myclient" secret="password123" authorized-grant-types="password,refresh_token" scope="myapp" authorities="ROLE_CLIENT"/>
+    </oauth:client-details-service>
+
+</beans>
