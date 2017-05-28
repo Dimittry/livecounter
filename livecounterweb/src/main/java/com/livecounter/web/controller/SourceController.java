@@ -15,8 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-@Controller
-@RequestMapping(value = "/rest/sources/")
+//@Controller
+//@RequestMapping(value = "/rest/sources/")
 public class SourceController {
     @Autowired
     private SourceService sourceService;

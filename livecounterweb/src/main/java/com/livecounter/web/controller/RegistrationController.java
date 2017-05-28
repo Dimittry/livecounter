@@ -5,6 +5,7 @@ import com.livecounter.exceptions.EmailExistException;
 import com.livecounter.persistence.model.User;
 import com.livecounter.service.UserService;
 import com.livecounter.web.dto.UserDto;
+import org.omg.CORBA.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +19,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
-@Controller
+//@Controller
 public class RegistrationController {
     @Autowired
     UserService userService;
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login() {
+        return "index";
+    }
 
     @RequestMapping(value="/user/show", method = RequestMethod.GET)
     public String showRegistrationForm(WebRequest request, Model model) {
