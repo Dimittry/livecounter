@@ -5,7 +5,8 @@ module.exports = {
     entry : path.join(__dirname, 'src/main/webapp/resources/js/main'),
     output: {
         path: path.join(__dirname, 'src/main/webapp/resources/vendor/js'),
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        publicPath : '/'
     },
     module: {
         loaders: [
@@ -31,6 +32,9 @@ module.exports = {
                 loader: 'file-loader',
             }
         ]
+    },
+    devServer : {
+        historyApiFallback : true
     },
     plugins: [
         new ExtractTextPlugin("../css/style1.css"),
