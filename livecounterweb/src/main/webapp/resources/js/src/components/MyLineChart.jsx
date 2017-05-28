@@ -13,9 +13,9 @@ export default class MyLineChart extends React.Component {
         // var  ctx = document.getElementById("myChart");
         let chartCanvas = this.refs.chart;
 
-        axios.get('http://localhost:8080/tests')
+        axios.get('http://localhost:8080/rest/tests/')
             .then(res => {
-                console.log(res);
+                // console.log(res);
                 // const posts = res.data.data.children.map(obj => obj.data);
                 // this.setState({ posts });
                 let type = 5;
@@ -23,7 +23,10 @@ export default class MyLineChart extends React.Component {
                 let labels = [];
                 res.data.map(source => {
                     let first = source.sourceData[0];
-                    console.log(first);
+                    // console.log(first);
+                    // console.log("source");
+                    // console.log(source);
+
                     let dataset = {
                         'label' : source.checkName,
                         'data' : source.sourceData.filter(elem => (elem.type == type)).map(elem => elem.value),
@@ -49,13 +52,13 @@ export default class MyLineChart extends React.Component {
                     datasets.push(dataset);
                     if(labels.length === 0) {
                         labels = source.sourceData.filter(elem => (elem.type == type)).map(elem => {
-                            console.log(elem);
+                            // console.log(elem);
                             return elem.day.dayOfMonth + " " + elem.day.monthValue;
                         });
                     }
                 });
-                console.log(datasets);
-                console.log(labels);
+                // console.log(datasets);
+                // console.log(labels);
                 var myChart = new Chart(chartCanvas, {
                     type: 'line',
                     data: {

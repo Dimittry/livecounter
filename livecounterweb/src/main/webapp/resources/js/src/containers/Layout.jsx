@@ -2,17 +2,18 @@ var React = require('react');
 var ReactRouter = require('react-router-dom');
 var Route = ReactRouter.Route;
 
-import Navigation from './Navigation.jsx';
+import Navigation from '../components/Navigation.jsx';
 
 
-const LayoutWithoutHeader = ({component: Component, ...rest}) => {
+const Layout = ({component: Component, ...rest}) => {
     return (
         <Route {...rest} render={matchProps => (
             <div className="DefaultLayout">
+                <Navigation/>
                 <Component {...matchProps} />
             </div>
         )} />
     )
 };
 
-module.exports = LayoutWithoutHeader;
+module.exports = Layout;

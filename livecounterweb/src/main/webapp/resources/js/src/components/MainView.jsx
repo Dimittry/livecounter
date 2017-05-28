@@ -13,7 +13,7 @@ export default class MainView extends React.Component{
                     <h2>test</h2>
 
 
-                    <input type="button" className="button" value="Logout" onclick="document.getElementById('logoutForm').submit();"/>
+                    <input type="button" className="button" value="Logout"/>
                     <div id="root"></div>
 
                 </div>

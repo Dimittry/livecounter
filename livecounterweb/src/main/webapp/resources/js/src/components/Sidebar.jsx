@@ -5,7 +5,7 @@ export default class Sidebar extends React.Component {
         const menuItems = this.props.menuItems || {};
         let menuHtml = Object.keys(menuItems).map((key) => {
             let item = menuItems[key];
-            return <li><a href={item.link}>{item.title}</a></li>
+            return <li key={key}><a href={item.link}>{item.title}</a></li>
         });
         return (
             <div className="col-sm-3 col-md-2 sidebar">
