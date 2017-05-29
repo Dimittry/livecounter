@@ -63,8 +63,8 @@
         <sec:csrf disabled="true"/>
     </sec:http>
 
-    <sec:http pattern="/profile**" create-session="never" entry-point-ref="oauthAuthenticationEntryPoint">
-        <sec:intercept-url pattern="/profile**" access="hasRole('ROLE_USER')"/>
+    <sec:http pattern="/rest/**" create-session="never" entry-point-ref="oauthAuthenticationEntryPoint">
+        <sec:intercept-url pattern="/rest/profile/**" access="hasRole('ROLE_CUSTOMER_user')"/>
 
         <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
 
